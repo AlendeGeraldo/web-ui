@@ -55,6 +55,22 @@ export const trainExperimentRequest = (experiment, operators) => (dispatch) => {
     type: actionTypes.TRAIN_EXPERIMENT_REQUEST,
   });
 
+  let parameters = [];
+  const newAray = operators.map(function (item) {
+    return item.parameters;
+  });
+
+  newAray.map(function (elem, i) {
+    let b = elem.length;
+    while (b--) {
+      const parameter = {
+        name: elem[b].name,
+        value: elem[b].value,
+      };
+      parameters.push(parameter);
+    }
+  });
+
   // dispatching experiment training loading data action
   dispatch(experimentTrainingLoadingData());
 
@@ -68,6 +84,7 @@ export const trainExperimentRequest = (experiment, operators) => (dispatch) => {
   trainObject.components = operators.map((operator) => ({
     operatorId: operator.uuid,
     notebookPath: operator.trainingNotebookPath,
+    parameters: parameters,
   }));
 
   // filtering dataset
